@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jottee — Minimalist & Powerful Note Taking</title>
+    <meta name="description" content="Jottee is an elegant, fast, and feature-rich web note-taking application. Organize ideas, format with ease, and save locally.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i data-lucide="sparkles"></i>
+                    </div>
+                    <span class="logo-text">Jottee</span>
+                    <span class="badge-beta">MVP</span>
+                </div>
+                <button class="icon-btn close-sidebar-btn" id="closeSidebarBtn" title="Close Sidebar">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="sidebar-action">
+                <button class="btn btn-primary btn-block" id="sidebarNewNoteBtn">
+                    <i data-lucide="plus"></i>
+                    <span>New Note</span>
+                    <kbd>Ctrl+N</kbd>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Views</span>
+                    <button class="nav-item active" data-view="all">
+                        <i data-lucide="sticky-note"></i>
+                        <span>All Notes</span>
+                        <span class="nav-count" id="countAll">0</span>
+                    </button>
+                    <button class="nav-item" data-view="pinned">
+                        <i data-lucide="pin"></i>
+                        <span>Pinned</span>
+                        <span class="nav-count" id="countPinned">0</span>
+                    </button>
+                    <button class="nav-item" data-view="favorites">
+                        <i data-lucide="star"></i>
+                        <span>Favorites</span>
+                        <span class="nav-count" id="countFavorites">0</span>
+                    </button>
+                    <button class="nav-item" data-view="trash">
+                        <i data-lucide="trash-2"></i>
+                        <span>Trash</span>
+                        <span class="nav-count" id="countTrash">0</span>
+                    </button>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-header">
+                        <span class="nav-section-title">Tags</span>
+                        <button class="icon-btn-xs" id="addTagQuickBtn" title="Add Tag">
+                            <i data-lucide="plus"></i>
+                        </button>
+                    </div>
+                    <div class="tags-list" id="sidebarTagsList">
+                        <!-- Dynamic Tags -->
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Color Filters</span>
+                    <div class="color-filters" id="colorFilters">
+                        <button class="color-filter-dot active" data-color="all" style="--dot-color: #818cf8;" title="All Colors"></button>
+                        <button class="color-filter-dot" data-color="purple" style="--dot-color: #a855f7;" title="Purple"></button>
+                        <button class="color-filter-dot" data-color="blue" style="--dot-color: #3b82f6;" title="Blue"></button>
+                        <button class="color-filter-dot" data-color="emerald" style="--dot-color: #10b981;" title="Emerald"></button>
+                        <button class="color-filter-dot" data-color="amber" style="--dot-color: #f59e0b;" title="Amber"></button>
+                        <button class="color-filter-dot" data-color="rose" style="--dot-color: #f43f5e;" title="Rose"></button>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="storage-info">
+                    <div class="storage-bar">
+                        <div class="storage-fill" id="storageFill" style="width: 12%;"></div>
+                    </div>
+                    <span class="storage-text" id="storageText">Storage: LocalStorage</span>
+                </div>
+
+                <div class="footer-actions">
+                    <button class="icon-btn" id="themeToggleBtn" title="Toggle Theme (Dark/Light)">
+                        <i data-lucide="moon" id="themeIcon"></i>
+                    </button>
+                    <button class="icon-btn" id="exportDataBtn" title="Export Backup (JSON)">
+                        <i data-lucide="download"></i>
+                    </button>
+                    <button class="icon-btn" id="importDataBtn" title="Import Backup (JSON)">
+                        <i data-lucide="upload"></i>
+                    </button>
+                    <input type="file" id="importFileInput" accept=".json" style="display:none;">
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="navbar-left">
+                    <button class="icon-btn toggle-sidebar-btn" id="openSidebarBtn" title="Toggle Sidebar">
+                        <i data-lucide="panel-left"></i>
+                    </button>
+                    <div class="current-view-info">
+                        <h1 class="view-title" id="currentViewTitle">All Notes</h1>
+                        <span class="view-subtitle" id="currentViewSubtitle">0 notes stored</span>
+                    </div>
+                </div>
+
+                <div class="navbar-search">
+                    <div class="search-input-wrapper">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" id="searchInput" placeholder="Search notes by title, content, or tags... (Ctrl+F)" autocomplete="off">
+                        <button class="icon-btn-xs clear-search-btn" id="clearSearchBtn" style="display:none;">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="navbar-right">
+                    <div class="sort-wrapper">
+                        <label for="sortSelect" class="sr-only">Sort Notes</label>
+                        <select id="sortSelect" class="custom-select">
+                            <option value="updated-desc">Last Modified</option>
+                            <option value="created-desc">Date Created (Newest)</option>
+                            <option value="created-asc">Date Created (Oldest)</option>
+                            <option value="title-asc">Title (A-Z)</option>
+                        </select>
+                    </div>
+
+                    <div class="view-mode-toggle">
+                        <button class="icon-btn active" id="viewModeGrid" title="Grid View">
+                            <i data-lucide="layout-grid"></i>
+                        </button>
+                        <button class="icon-btn" id="viewModeList" title="List View">
+                            <i data-lucide="list"></i>
+                        </button>
+                    </div>
+
+                    <button class="btn btn-secondary empty-trash-btn" id="emptyTrashBtn" style="display:none;">
+                        <i data-lucide="trash-2"></i>
+                        <span>Empty Trash</span>
+                    </button>
+
+                    <button class="btn btn-primary header-new-btn" id="headerNewNoteBtn">
+                        <i data-lucide="plus"></i>
+                        <span>New Note</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Active Tag / Search Banner -->
+            <div class="active-filter-banner" id="activeFilterBanner" style="display:none;">
+                <div class="filter-tag-pill">
+                    <span id="activeFilterText">Filtered by: Tag</span>
+                    <button class="icon-btn-xs" id="clearFilterBtn">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notes List / Grid Container -->
+            <div class="notes-container grid-view" id="notesContainer">
+                <!-- Dynamic Note Cards injected here -->
+            </div>
+
+            <!-- Empty State Display -->
+            <div class="empty-state" id="emptyState" style="display:none;">
+                <div class="empty-state-icon">
+                    <i data-lucide="notebook-pen"></i>
+                </div>
+                <h3 class="empty-state-title" id="emptyStateTitle">No notes found</h3>
+                <p class="empty-state-desc" id="emptyStateDesc">Click "New Note" to capture your thoughts, tasks, or code snippets.</p>
+                <button class="btn btn-primary" id="emptyStateActionBtn">
+                    <i data-lucide="plus"></i>
+                    <span>Create Your First Note</span>
+                </button>
+            </div>
+        </main>
+
+        <!-- Slide-over / Modal Note Editor -->
+        <div class="editor-overlay" id="editorOverlay">
+            <div class="editor-drawer" id="editorDrawer">
+                <div class="editor-header">
+                    <div class="editor-header-left">
+                        <button class="icon-btn" id="closeEditorBtn" title="Close Editor (Esc)">
+                            <i data-lucide="arrow-left"></i>
+                        </button>
+                        <div class="save-status" id="saveStatus">
+                            <i data-lucide="check-circle-2" class="status-icon"></i>
+                            <span id="saveStatusText">Saved</span>
+                        </div>
+                    </div>
+
+                    <div class="editor-header-actions">
+                        <!-- Color Selector -->
+                        <div class="editor-color-picker" id="editorColorPicker">
+                            <button class="color-picker-btn" data-color="purple" style="background:#a855f7;" title="Purple Accent"></button>
+                            <button class="color-picker-btn" data-color="blue" style="background:#3b82f6;" title="Blue Accent"></button>
+                            <button class="color-picker-btn" data-color="emerald" style="background:#10b981;" title="Emerald Accent"></button>
+                            <button class="color-picker-btn" data-color="amber" style="background:#f59e0b;" title="Amber Accent"></button>
+                            <button class="color-picker-btn" data-color="rose" style="background:#f43f5e;" title="Rose Accent"></button>
+                        </div>
+
+                        <button class="icon-btn" id="togglePinBtn" title="Pin / Unpin Note">
+                            <i data-lucide="pin"></i>
+                        </button>
+                        <button class="icon-btn" id="toggleFavBtn" title="Favorite Note">
+                            <i data-lucide="star"></i>
+                        </button>
+
+                        <div class="dropdown-wrapper">
+                            <button class="icon-btn" id="editorMenuBtn" title="More Actions">
+                                <i data-lucide="more-vertical"></i>
+                            </button>
+                            <div class="dropdown-menu" id="editorDropdown">
+                                <button class="dropdown-item" id="exportMarkdownBtn">
+                                    <i data-lucide="file-code"></i> Export as Markdown
+                                </button>
+                                <button class="dropdown-item" id="exportTextBtn">
+                                    <i data-lucide="file-text"></i> Export as Plain Text
+                                </button>
+                                <button class="dropdown-item" id="duplicateNoteBtn">
+                                    <i data-lucide="copy"></i> Duplicate Note
+                                </button>
+                                <div class="dropdown-divider"></div>
+                                <button class="dropdown-item danger" id="deleteNoteBtn">
+                                    <i data-lucide="trash-2"></i> Move to Trash
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formatting Toolbar -->
+                <div class="editor-toolbar">
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-format="bold" title="Bold (Ctrl+B)">
+                            <i data-lucide="bold"></i>
+                        </button>
+                        <button class="toolbar-btn" data-format="italic" title="Italic (Ctrl+I)">
+                            <i data-lucide="italic"></i>
+                        </button>
+                        <button class="toolbar-btn" data-format="underline" title="Underline (Ctrl+U)">
+                            <i data-lucide="underline"></i>
+                        </button>
+                        <button class="toolbar-btn" data-format="strikethrough" title="Strikethrough">
+                            <i data-lucide="strikethrough"></i>
+                        </button>
+                    </div>
+
+                    <div class="toolbar-separator"></div>
+
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-format="h1" title="Heading 1">
+                            <span class="tb-text">H1</span>
+                        </button>
+                        <button class="toolbar-btn" data-format="h2" title="Heading 2">
+                            <span class="tb-text">H2</span>
+                        </button>
+                        <button class="toolbar-btn" data-format="quote" title="Blockquote">
+                            <i data-lucide="quote"></i>
+                        </button>
+                        <button class="toolbar-btn" data-format="code" title="Code Block">
+                            <i data-lucide="code"></i>
+                        </button>
+                    </div>
+
+                    <div class="toolbar-separator"></div>
+
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-format="ul" title="Bullet List">
+                            <i data-lucide="list"></i>
+                        </button>
+                        <button class="toolbar-btn" data-format="ol" title="Numbered List">
+                            <i data-lucide="list-ordered"></i>
+                        </button>
+                        <button class="toolbar-btn" data-format="checklist" title="Checklist Item">
+                            <i data-lucide="check-square"></i>
+                        </button>
+                    </div>
+
+                    <div class="toolbar-separator"></div>
+
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-format="highlight" title="Highlight Text">
+                            <i data-lucide="highlighter"></i>
+                        </button>
+                        <button class="toolbar-btn" id="togglePreviewBtn" title="Toggle Split Markdown Preview">
+                            <i data-lucide="eye"></i>
+                            <span class="tb-label">Preview</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tags Input Bar -->
+                <div class="editor-tags-bar">
+                    <i data-lucide="tag" class="tag-icon"></i>
+                    <div class="editor-tags-list" id="editorTagsList">
+                        <!-- Dynamic tag chips -->
+                    </div>
+                    <input type="text" id="tagInput" placeholder="Add tag and press Enter..." autocomplete="off">
+                </div>
+
+                <!-- Editor Body / Split Workspace -->
+                <div class="editor-body" id="editorBody">
+                    <div class="editor-pane edit-pane">
+                        <input type="text" id="noteTitleInput" class="note-title-input" placeholder="Note Title..." autocomplete="off">
+                        <textarea id="noteContentInput" class="note-content-input" placeholder="Start typing your note here... Markdown syntax (#, *, -, `) supported!"></textarea>
+                    </div>
+                    <div class="editor-pane preview-pane" id="previewPane" style="display:none;">
+                        <h1 class="preview-title" id="previewTitle">Untitled</h1>
+                        <div class="preview-content" id="previewContent"></div>
+                    </div>
+                </div>
+
+                <!-- Editor Footer Bar -->
+                <div class="editor-footer">
+                    <div class="editor-stats">
+                        <span id="wordCount">0 words</span>
+                        <span class="dot">•</span>
+                        <span id="charCount">0 characters</span>
+                        <span class="dot">•</span>
+                        <span id="lastEditedTime">Edited just now</span>
+                    </div>
+                    <div class="editor-footer-actions">
+                        <button class="btn btn-secondary" id="editorCloseSaveBtn">
+                            <span>Done</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Confirmation Modal -->
+        <div class="modal-overlay" id="confirmModal">
+            <div class="modal-card">
+                <div class="modal-icon warning" id="modalIcon">
+                    <i data-lucide="alert-triangle"></i>
+                </div>
+                <h3 class="modal-title" id="modalTitle">Are you sure?</h3>
+                <p class="modal-message" id="modalMessage">This action cannot be undone.</p>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="modalCancelBtn">Cancel</button>
+                    <button class="btn btn-danger" id="modalConfirmBtn">Confirm</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notifications Container -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <!-- Main JavaScript File -->
+    <script src="app.js"></script>
+</body>
+</html>
