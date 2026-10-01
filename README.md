@@ -1,60 +1,240 @@
-# Jottee — Minimalist & Powerful Web Note Taking MVP
+# Jottee — Minimalist & Powerful Web Note-Taking MVP
 
-Jottee is a sleek, browser-based note-taking application engineered for fast thought capture, rich formatting, and effortless organization. Built with a dark glassmorphic UI, real-time local persistence, and zero external build overhead, Jottee provides an instant, distraction-free writing environment.
+Jottee is a browser-based note-taking application built for fast thought capture, rich formatting, and simple organization.
+
+The MVP focuses on keeping the writing experience lightweight and accessible: no account is required, notes persist locally in the browser, and the application runs without a frontend build framework.
 
 ---
 
 ## 📌 Project Overview
 
-### What the Project Is
-Jottee is a single-page web application (MVP) that allows users to create, format, organize, search, pin, favorite, and back up notes directly within their web browser. It features a responsive layout with grid/list toggles, tag and color accent filtering, a slide-over markdown editor with live preview, and a soft-delete trash bin.
+### What Is Jottee?
 
-### Who It Is Designed For
-- **Developers & Programmers**: Quick storage for code snippets, commands, and tech stack ideas.
-- **Students & Researchers**: Organizing class notes, meeting summaries, and research findings with color tags.
-- **Creators & Writers**: Capturing sudden ideas, drafting posts, and tracking checklists without needing cloud logins.
-- **Privacy-Conscious Users**: Anyone wanting a private note app where 100% of data remains stored locally in their browser.
+Jottee is a single-page note-taking application that allows users to:
 
-### The Problem It Solves
-1. **Account Lock-in & Bloat**: Most modern note apps require user registration, internet connectivity, and heavy electron bundles. Jottee works instantly offline in any web browser.
-2. **Accidental Data Loss**: Unexpected tab closures or crashes often result in lost notes. Jottee automatically debounces and saves every keystroke to `localStorage`.
-3. **Cluttered Organization**: Finding specific notes across multiple categories is hard. Jottee combines instant search across title/content/tags, multi-criteria color filters, pinned notes, and tag badges.
+- Create and edit notes
+- Format notes with lightweight Markdown
+- Search notes instantly
+- Organize notes with tags and color accents
+- Pin and favorite important notes
+- Switch between grid and list views
+- Preview Markdown while writing
+- Move notes to Trash and restore them
+- Permanently delete notes when needed
+- Export and import notes in multiple formats
 
----
+The application is designed around a simple principle:
 
-## 🛠️ Technologies & Tools Used
-
-- **HTML5**: Semantic markup structuring the sidebar, navigation, search bar, card containers, editor drawer, toolbar, and modal dialogs.
-- **Vanilla CSS3**: Glassmorphism aesthetic using CSS variables, blurs (`backdrop-filter`), flexbox, grid, smooth transitions, and dark/light mode themes.
-- **JavaScript (ES6+)**: Functional and event-driven application logic, state management, custom markdown parser, local storage service, and export/import handlers.
-- **Typography & Icons**:
-  - `Outfit` (Headings & Brand)
-  - `Plus Jakarta Sans` (UI & Body Text)
-  - `Fira Code` (Code blocks & shortcuts)
-  - `Lucide Icons` (SVG UI Icons via CDN)
+> **Capture thoughts quickly without adding unnecessary complexity.**
 
 ---
 
-## 📐 Important Design & Development Decisions
+## 🎯 The Problem
 
-1. **Vanilla Web Stack**: Avoided heavy frameworks (React/Vue/Next.js) or build tools (Webpack/Vite) to eliminate installation steps and deliver sub-millisecond load times.
-2. **Slide-Over Drawer Editor**: Instead of navigating away from the notes grid or opening full-page editors, Jottee uses a slide-over drawer overlay (`.editor-drawer`). This keeps the user contextually aware of their notes workspace.
-3. **Soft-Delete Trash Model**: Deleting a note moves it to a "Trash" view rather than destroying it immediately. Users can restore notes or clear the trash permanently when ready.
-4. **Lightweight Markdown Parser**: Integrated a custom regex-based parser into the split preview pane to support headers (`#`, `##`), bold (`**`), italics (`*`), strikethrough (`~~`), code blocks (` ``` `), blockquotes (`>`), checklists (`- [ ]`), and highlights (`==`) without heavy external markdown libraries.
-5. **Debounced Auto-Save & Visual Feedback**: Typing automatically updates `localStorage` with a 600ms debounce while displaying a visual status indicator ("Saving..." -> "Saved").
+Many note-taking tools introduce friction through accounts, cloud dependencies, complex interfaces, or heavyweight applications.
+
+Jottee explores a simpler approach for users who want a lightweight place to capture and organize information directly in their browser.
+
+### 1. Account Lock-In & Bloat
+
+Jottee does not require an account for the MVP. Notes are stored locally in the browser, allowing the application to work without a backend or external database.
+
+### 2. Accidental Data Loss
+
+Jottee uses debounced auto-save to persist changes to `localStorage`, reducing the risk of losing work after unexpected tab closures or interruptions.
+
+### 3. Difficult Note Organization
+
+As notes accumulate, finding the right one can become difficult.
+
+Jottee combines:
+
+- Instant search across title, content, and tags
+- Pinned notes
+- Favorite notes
+- Tags
+- Color filters
+- View filters
+- Sorting
+
+into a single workspace.
 
 ---
 
-## ⚠️ Challenges Encountered & Solutions
+## 👥 Who It Is Designed For
 
-### 1. PowerShell Script Execution Policy Blocking Node/Npx
-- **Challenge**: Executing `npx serve` directly in Windows PowerShell failed with a `PSSecurityException` due to default script execution policies.
-- **Solution**: Executed dev server commands using `powershell -ExecutionPolicy Bypass -Command "npx -y serve -p 8080"` to safely bypass local execution policy restrictions.
+### Developers & Programmers
 
-### 2. Fast Multi-Criteria Filtering & Sorting
-- **Challenge**: Combining search text queries, active view filters (All, Pinned, Favorites, Trash), tag selections, color filters, and sort options simultaneously without causing layout stutters.
-- **Solution**: Created a centralized pipeline function `getFilteredNotes()` in `app.js` that evaluates all constraints sequentially and applies sorting rules before triggering DOM updates.
+For capturing code snippets, commands, technical ideas, and quick references.
 
-### 3. Native Markdown Formatting Injection
-- **Challenge**: Applying rich text formatting (bold, headers, lists) to standard `<textarea>` elements without losing cursor selection.
-- **Solution**: Developed `applyFormatting(format)` using `selectionStart` and `selectionEnd` APIs to wrap or prefix selected text dynamically and re-position cursor bounds seamlessly.
+### Students & Researchers
+
+For organizing class notes, research findings, meeting notes, and study material.
+
+### Creators & Writers
+
+For capturing ideas, drafting content, and keeping lightweight checklists.
+
+### Privacy-Conscious Users
+
+For users who prefer keeping their notes inside their own browser rather than relying on a cloud account.
+
+---
+
+## ✨ Core MVP Features
+
+### Note Management
+
+- Create notes
+- Edit notes
+- Duplicate notes
+- Soft-delete notes
+- Restore notes
+- Permanently delete notes
+
+### Organization
+
+- Tags
+- Color accents
+- Pinning
+- Favorites
+- Grid/list views
+- Search
+- Sorting
+- Filtering
+
+### Writing Experience
+
+- Markdown formatting
+- Split editor/preview
+- Formatting toolbar
+- Debounced auto-save
+- Save-status feedback
+
+### Backup & Portability
+
+Notes can be exported and imported using:
+
+- `.json`
+- `.md`
+- `.txt`
+
+### Keyboard Shortcuts
+
+The MVP includes shortcuts such as:
+
+- `Ctrl + N` — create a new note
+- `Ctrl + F` — focus search
+- `Esc` — close active interfaces
+
+---
+
+## 🛠️ Technologies & Tools
+
+### HTML5
+
+Used for the semantic application structure, including the sidebar, navigation, search, note cards, editor drawer, toolbar, and modal dialogs.
+
+### Vanilla CSS3
+
+Used for the visual system, including:
+
+- CSS variables
+- Glassmorphism
+- `backdrop-filter`
+- Flexbox
+- CSS Grid
+- Responsive layouts
+- Transitions
+- Dark/light themes
+
+### JavaScript (ES6+)
+
+Used for:
+
+- Application state
+- Note operations
+- Local persistence
+- Search and filtering
+- Markdown parsing
+- Import/export
+- UI interactions
+
+### Typography & Icons
+
+- `Outfit` — headings and brand
+- `Plus Jakarta Sans` — UI and body text
+- `Fira Code` — code blocks and shortcuts
+- `Lucide Icons` — interface icons via CDN
+
+---
+
+## 📐 Design & Development Decisions
+
+### 1. Vanilla Web Stack
+
+The MVP intentionally avoids frameworks such as React, Vue, and Next.js and build tools such as Webpack and Vite.
+
+The goal was to keep the project lightweight, easy to run, and free from unnecessary build complexity.
+
+### 2. Slide-Over Editor
+
+Instead of navigating away from the note collection, editing happens inside a slide-over drawer.
+
+This keeps the user's workspace visible while they write or edit.
+
+### 3. Soft-Delete Trash Model
+
+Deleting a note moves it to Trash instead of immediately destroying it.
+
+Users can then restore the note or permanently delete it.
+
+### 4. Lightweight Markdown Parser
+
+A custom parser was used instead of introducing a large Markdown dependency.
+
+The current implementation supports formatting such as:
+
+- Headers
+- Bold
+- Italics
+- Strikethrough
+- Code blocks
+- Blockquotes
+- Checklists
+- Highlights
+
+### 5. Debounced Auto-Save
+
+Changes are persisted to `localStorage` using a 600ms debounce.
+
+The interface communicates the save state through:
+
+**Saving... → Saved**
+
+This provides feedback without writing to storage on every keystroke.
+
+### 6. Client-Side Persistence
+
+The MVP keeps notes inside the browser using `localStorage`.
+
+This removes the need for authentication, a backend database, or a remote persistence layer for the initial version.
+
+---
+
+## ⚙️ Architecture at a Glance
+
+Jottee is intentionally divided into three primary layers:
+
+```text
+index.html
+    ↓
+Semantic UI structure
+    ↓
+styles.css
+    ↓
+Visual system & responsive layout
+    ↓
+app.js
+    ↓
+State, persistence & interactions
